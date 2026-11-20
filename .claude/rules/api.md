@@ -4,9 +4,9 @@ paths:
 ---
 
 # Regras da API (apps/api)
-- Framework: Hono em Node 24. Uma rota por arquivo em src/routes/.
+- Framework: Hono em Node 24. Um módulo por pasta em src/modules/<modulo>/ com routes.ts, service.ts e repo.ts.
 - Valide toda entrada (body, params, query) com os schemas Zod de packages/shared.
-- Chamadas à Claude API só em src/ai/. Use saída estruturada (JSON Schema) e
+- Chamadas à Gemini API só em src/modules/ai/, via QuestionGenerator. Use saída estruturada (JSON Schema) e
   valide a resposta com Zod antes de salvar ou devolver.
 - Nunca registre em log a chave da API, tokens ou dados pessoais do usuário.
 - Rate limit por usuário em todas as rotas que chamam a IA.
