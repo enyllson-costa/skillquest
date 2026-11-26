@@ -67,6 +67,8 @@ skillquest/
 │  ├─ migrations/               # SQL versionado (tabelas, RLS, índices, RPCs, seed de achievements)
 │  └─ seed.sql                  # dados locais/demo (opcional)
 ├─ e2e/                         # Playwright *.spec.ts (AI_PROVIDER=mock)
+├─ scripts/harness/             # verify, check-arch, check-bundle (+ testes) — ADR 0003
+├─ .github/workflows/ci.yml     # pnpm verify + commitlint em PR e push para main
 └─ docs/                        # PRD, ARCHITECTURE, ADR/, plans/
 ```
 

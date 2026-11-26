@@ -1,0 +1,15 @@
+{
+  "name": "@skillquest/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.7",
+    "msw": "^3.0.7",
+    "typescript": "~6.0.3",
+    "vitest": "^5.1.1"
+  }
+}

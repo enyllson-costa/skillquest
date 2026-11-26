@@ -24,12 +24,15 @@ Leia @docs/PRD.md e @docs/ARCHITECTURE.md antes de mudanças estruturais.
 - Testes: Vitest + Angular Testing Library (unidade/componente, arquivos `*.test.ts`),
   Playwright (E2E, `e2e/*.spec.ts`), MSW para mockar a IA
 
-## Comandos (planejado)
-- pnpm dev        # web + api
-- pnpm test       # vitest em todo o monorepo
-- pnpm e2e        # playwright
+## Comandos
+- pnpm verify:fast  # gate durante o trabalho: format, lint, typecheck e testes do que mudou + check:arch
+- pnpm verify       # gate completo antes do commit: format:check, lint, typecheck, check:arch, test, build, check:bundle
+- pnpm test         # vitest em todo o monorepo + testes do harness (test:harness)
 - pnpm typecheck
-- pnpm lint
+- pnpm lint         # eslint, incluindo as regras de camada da ARCHITECTURE §0
+- pnpm format       # prettier --write
+- pnpm check:arch   # regras de arquitetura e de processo (scripts/harness/check-arch.mjs)
+- pnpm dev, pnpm e2e  # planejados: entram com o scaffold do web/api
 
 ## Convenções
 - TypeScript strict, sem `any`.
