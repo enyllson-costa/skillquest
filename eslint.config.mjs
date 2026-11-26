@@ -2,6 +2,7 @@
 // arquiteturais da docs/ARCHITECTURE.md como erros de lint, com a fonte na mensagem.
 import { builtinModules } from 'node:module'
 import js from '@eslint/js'
+import angular from 'angular-eslint'
 import { defineConfig } from 'eslint/config'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
@@ -74,7 +75,16 @@ const PURE_GLOBALS = ['process', 'performance', 'crypto', 'fetch'].map((name) =>
 
 export default defineConfig(
   {
-    ignores: ['**/node_modules/**', '**/dist/**', '**/coverage/**', '.harness/**', '.claude/**'],
+    ignores: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.angular/**',
+      '**/playwright-report/**',
+      '**/test-results/**',
+      '**/coverage/**',
+      '.harness/**',
+      '.claude/**',
+    ],
   },
   js.configs.recommended,
   {
@@ -95,6 +105,37 @@ export default defineConfig(
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/consistent-type-imports': 'error',
     },
+  },
+
+  // ---- apps/web: angular-eslint (ADR 0002); tsconfigs explícitos porque o apps/web/tsconfig.json só tem "references" ----
+  {
+    files: ['apps/web/**/*.ts'],
+    extends: [angular.configs.tsRecommended],
+    processor: angular.processInlineTemplates,
+    languageOptions: {
+      globals: { ...globals.browser },
+      parserOptions: {
+        projectService: false,
+        project: ['apps/web/tsconfig.app.json', 'apps/web/tsconfig.spec.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: {
+      '@angular-eslint/directive-selector': [
+        'error',
+        { type: 'attribute', prefix: 'sq', style: 'camelCase' },
+      ],
+      '@angular-eslint/component-selector': [
+        'error',
+        { type: 'element', prefix: 'sq', style: 'kebab-case' },
+      ],
+      '@angular-eslint/prefer-on-push-component-change-detection': 'error',
+      '@angular-eslint/prefer-standalone': 'error',
+    },
+  },
+  {
+    files: ['apps/web/**/*.html'],
+    extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
   },
 
   // ---- apps/web: nunca importa a api; features só falam com a api pelo ApiClient ----

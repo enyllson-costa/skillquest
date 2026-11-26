@@ -18,7 +18,8 @@
     "check:bundle": "node scripts/harness/check-bundle.mjs",
     "verify": "node scripts/harness/verify.mjs",
     "verify:fast": "node scripts/harness/verify.mjs --fast",
-    "prepare": "simple-git-hooks"
+    "prepare": "simple-git-hooks",
+    "e2e": "playwright test"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm exec lint-staged",
@@ -32,10 +33,13 @@
     "*.{html,json,css,scss,yml,yaml}": "prettier --write"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.1",
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.1",
     "@types/node": "^26.6.7",
+    "angular-eslint": "^22.8.0",
     "eslint": "^10.15.0",
     "globals": "^17.14.0",
     "lint-staged": "^17.6.2",
