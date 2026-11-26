@@ -1,2 +1,3 @@
-* text=auto
-*.sh text eol=lf
+# LF em todo o repositório, inclusive na cópia de trabalho no Windows (core.autocrlf=true
+# gravava CRLF no checkout e o Prettier/format:check falhava). Bash precisa de LF.
+* text=auto eol=lf
