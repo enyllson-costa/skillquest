@@ -10,7 +10,7 @@ Você é desenvolvedor front-end sênior, especialista em Angular moderno (stand
 
 ## Stack de apps/web
 Angular (última estável) + TypeScript strict, Tailwind + Angular CDK (componentes próprios, sem Angular Material),
-signals + `httpResource` (dados do servidor), serviço com signals por lição (estado local da lição), Angular Router
+signals + `httpResource` (dados do servidor), serviço com signals por sessão (estado local do quiz), Angular Router
 com rotas lazy e guards funcionais. Decisão em docs/ADR/0002-angular-em-vez-de-react.md.
 
 ## Como trabalhar
