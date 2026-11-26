@@ -12,8 +12,9 @@ paths:
 - Templates com control flow `@if` / `@for (...; track item.id)` / `@switch`; nada de `*ngIf`/`*ngFor`.
 - Estado do servidor: `httpResource` (ou `resource`) para leituras, `HttpClient` para mutações, encapsulados
   num serviço da feature. O Bearer do Supabase entra por um interceptor funcional, nunca à mão.
-- Estado da lição: um serviço com signals (`signal`, `computed`) por lição, provido na rota da lição
-  (`providers` da rota), no lugar de store global.
+- Estado da sessão (nivelamento, prática, revisão de erros): um serviço com signals (`signal`, `computed`)
+  por sessão, provido na rota da sessão (`providers` da rota), no lugar de store global.
+- O popup "Como foi?" usa `@angular/cdk/dialog` (foco preso e devolvido, Esc fecha = "Na medida").
 - Resposta do quiz: atualize o signal de forma otimista ao clicar (opção marcada, botões desativados) e
   aplique o `feedback` da api quando chegar; reverta em caso de erro.
 - Troca de pergunta animada com View Transitions (`withViewTransitions()` no router ou

@@ -9,7 +9,7 @@ import tseslint from 'typescript-eslint'
 const PURE_MODULES = [
   'apps/api/src/modules/leveling/**/*.ts',
   'apps/api/src/modules/srs/**/*.ts',
-  'apps/api/src/modules/path/build.ts',
+  'apps/api/src/modules/practice/compose.ts',
   'apps/api/src/modules/gamification/rules.ts',
   'apps/api/src/modules/achievements/rules.ts',
 ]

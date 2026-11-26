@@ -17,7 +17,7 @@ Fonte da verdade: docs/ARCHITECTURE.md §5 (fluxo) e §6 (algoritmo). Este arqui
 - Informação acumulada: info ← info + P × (1 − P); SE = 1 / √info.
 - Recalibração de b (questão com ≥ 5 respostas): b ← b − 0,05 × (r − P). Não vale no contexto `mistakes`.
 - Resposta dada com dica (só existe fora do nivelamento) não altera θ nem b.
-- Fora do nivelamento (lições, revisões), θ usa K fixo = 0,3; a revisão de erros não altera θ.
+- Fora do nivelamento (prática), θ usa K fixo = 0,3; a revisão de erros não altera θ. O ajuste do popup "Como foi?" é separado e não altera θ.
 
 ## Escolha da próxima questão
 1. Tópico: o que tem menos respostas nesta sessão (empate: ordem do tópico).
@@ -26,7 +26,7 @@ Fonte da verdade: docs/ARCHITECTURE.md §5 (fluxo) e §6 (algoritmo). Este arqui
 4. Pré-busca (com `waitUntil`) das candidatas para "acertou" e "errou", gravadas em `placement_sessions.prefetch`.
 
 ## Critério de parada
-Pelo menos 8 questões e SE < 0,6, **ou** 20 questões respondidas (o que vier primeiro).
+Pelo menos 10 questões e SE < 0,6, **ou** 20 questões respondidas (o que vier primeiro).
 
 ## Conversão em nível
 | θ final | Nível |
@@ -40,13 +40,13 @@ Pelo menos 8 questões e SE < 0,6, **ou** 20 questões respondidas (o que vier p
 ## Lacunas por tópico
 - Cada tópico tem θ_tópico próprio (`skill_estimates`), que começa no θ geral do momento da 1ª resposta do tópico e segue a mesma regra de atualização.
 - Rótulo no resultado: forte se θ_tópico ≥ θ + 0,5, fraco se ≤ θ − 0,5, neutro no resto ou com menos de 2 respostas.
-- Todos os tópicos alimentam a trilha (§7.1), ordenados por θ_tópico crescente; dominado = θ_tópico ≥ 0,5 com ≥ 2 respostas (vira unidade `tested`).
+- A prática usa os 2 tópicos de menor θ_tópico para as perguntas novas (ARCHITECTURE §7.3).
 
 ## Casos que precisam de teste
 - O exemplo numérico do §6 (θ: 0 → 0,40 → −0,03 → 0,30), com `toBeCloseTo`.
 - Acerta tudo → termina como especialista sem passar de 20 questões.
 - Erra tudo → termina como iniciante; θ decresce e continua finito.
 - Alterna certo/errado em dificuldade 3 → termina como intermediário.
-- Para antes de 20 quando SE < 0,6 a partir da 8ª questão; nunca para antes da 8ª.
+- Para antes de 20 quando SE < 0,6 a partir da 10ª questão; nunca para antes da 10ª.
 - K nunca fica abaixo de 0,3.
 - Recarregar a página no meio não perde o progresso (estado salvo no servidor).

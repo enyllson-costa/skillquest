@@ -10,7 +10,7 @@ paths:
   (getByRole), não por classe CSS.
 - Mocke a Gemini API com MSW (ou AI_PROVIDER=mock); nenhum teste chama a IA de verdade.
 - Datas fixas (vi.setSystemTime) em testes de streak e repetição espaçada.
-- E2E com Playwright cobrindo os fluxos: nivelamento completo, lição completa,
+- E2E com Playwright cobrindo os fluxos: nivelamento completo, prática de 5 com o popup "Como foi?",
   perder todas as vidas.
 
 ## Geral

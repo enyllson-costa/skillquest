@@ -10,7 +10,7 @@ Você é o orquestrador. Não implemente nada você mesmo: delegue cada etapa ao
 
 ## 1. Planejar
 - Delegue ao `architect`: criar docs/plans/<slug>.md a partir de docs/PRD.md e docs/ARCHITECTURE.md.
-- Se a feature envolver XP, streak, vidas, ligas ou trilha, consulte antes o `gamification-designer`.
+- Se a feature envolver XP, streak, vidas, conquistas ou a dificuldade da prática, consulte antes o `gamification-designer`.
 - Mostre o plano resumido (objetivo, tarefas por agente, critérios de aceite) e PARE. Espere eu aprovar ou pedir mudanças.
 
 ## 2. Implementar
