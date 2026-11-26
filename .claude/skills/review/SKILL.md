@@ -7,6 +7,7 @@ disable-model-invocation: true
 Foco extra pedido: $ARGUMENTS
 
 1. Rode `git status` e `git diff --stat` para ver o que mudou. Se não houver mudanças, diga isso e pare.
+   Rode `pnpm verify` (se existir) para que `.harness/last-verify.json` reflita as mudanças atuais; os revisores leem esse arquivo, e o resultado entra no topo do relatório.
 2. Escolha os revisores pelo que mudou:
    - Sempre: `code-reviewer`.
    - Arquivos em apps/api, supabase/, packages/shared ou qualquer coisa de auth/IA: `security-auditor`.

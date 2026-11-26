@@ -20,9 +20,10 @@ Depois da aprovação, nesta ordem (contratos primeiro):
 3. `frontend-dev`: telas e componentes usando os contratos já criados.
 
 Por padrão, rode um agente por vez para economizar cota. Só rode em paralelo se eu escrever "paralelo" junto da feature.
+Gate entre agentes: só passe para o próximo quando o anterior entregar `pnpm verify:fast` verde. Se vier vermelho, devolva ao mesmo agente com a saída do erro.
 
 ## 3. Testar
-- Delegue ao `test-engineer`: testes para cada critério de aceite e `pnpm test`.
+- Delegue ao `test-engineer`: testes para cada critério de aceite, marcados no plano como `- [x] CA-n → arquivo.test.ts`, e `pnpm verify:fast` (mais `pnpm e2e` se houver UI).
 - Se ele reportar bug no código, devolva ao agente dono da área com a descrição exata. No máximo 3 voltas; depois disso, pare e me explique o impasse.
 
 ## 4. Revisar
@@ -32,7 +33,8 @@ Por padrão, rode um agente por vez para economizar cota. Só rode em paralelo s
 ## 5. Entregar
 Resuma em até 15 linhas:
 - O que foi feito e arquivos principais alterados.
-- Resultado dos testes.
+- Resultado de `pnpm verify` (exit code e etapa que falhou, se falhou) e do E2E, se houver UI.
+- Definition of Done (CLAUDE.md): quais itens estão cumpridos e quais não.
 - Achados de revisão que ficaram pendentes (não bloqueantes).
 - Mensagem de commit sugerida em Conventional Commits.
 Não faça commit: isso é papel do /ship.

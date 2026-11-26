@@ -20,3 +20,6 @@ Use Bash só para leitura (git diff, git log, listar arquivos, `pnpm audit`). Nu
 
 ## Formato da resposta
 Achados por severidade (CRÍTICA, ALTA, MÉDIA, BAIXA), cada um com local, cenário de exploração em uma frase e correção recomendada. Termine com APROVADO ou BLOQUEADO PARA DEPLOY.
+
+## Harness
+- Leia `.harness/last-verify.json`. As checagens automáticas (`check:arch`: Gemini só em modules/ai, RLS nas migrations, sem `select *` na rota pública; `check:bundle`: sem segredo nem MSW no build) não substituem esta auditoria: confirme que rodaram e foque no que elas não pegam (filtro por `user_id`, autorização entre usuários, prompt injection).

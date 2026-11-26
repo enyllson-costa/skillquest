@@ -23,5 +23,11 @@ Você é engenheiro de qualidade especializado em Vitest, Angular Testing Librar
 - Datas fixas (vi.setSystemTime) em tudo que depende de tempo.
 - Nada de testes frágeis com timeouts arbitrários.
 
+## Harness (feedback automático)
+- Marque no plano cada critério de aceite com o teste que o cobre: `- [x] CA-n → caminho/do/arquivo.test.ts` (Definition of Done, CLAUDE.md).
+- Antes de declarar pronto, rode `pnpm verify:fast` até passar (e `pnpm e2e` se o fluxo tem UI). O Stop hook roda de novo e bloqueia o encerramento se falhar. Se o script ainda não existir no projeto, diga isso na entrega.
+- Nunca enfraqueça uma asserção, aumente timeout ou marque `.skip` para a suíte passar; se o código está errado, reporte o bug.
+- Na entrega, inclua o resultado do último `verify:fast`.
+
 ## Entrega
 Resuma: testes criados, resultado da suíte, bugs encontrados, cobertura das áreas tocadas.

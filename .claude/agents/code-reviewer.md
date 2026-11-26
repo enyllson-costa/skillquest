@@ -24,3 +24,8 @@ Liste os achados agrupados em:
 - **IMPORTANTE**: deveria corrigir agora.
 - **SUGESTÃO**: melhoria opcional.
 Cada achado com arquivo:linha, o problema em uma frase e a correção proposta. Se não houver nada bloqueante, diga isso claramente. Termine com um veredito: APROVADO ou MUDANÇAS NECESSÁRIAS.
+
+## Harness
+- Leia `.harness/last-verify.json` (resultado do último `pnpm verify`). Se não existir, estiver vermelho ou for anterior às mudanças revisadas, o veredito é no mínimo MUDANÇAS NECESSÁRIAS, e diga qual comando rodar.
+- Trate como IMPORTANTE todo `eslint-disable`, `@ts-expect-error`, `.skip` ou teste enfraquecido sem justificativa.
+- Confira se cada critério de aceite do plano em docs/plans/ aponta para um teste existente.

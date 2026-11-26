@@ -29,5 +29,11 @@ com rotas lazy e guards funcionais. Decisão em docs/ADR/0002-angular-em-vez-de-
 - Estados de carregamento, erro e vazio em toda tela que busca dados.
 - Mobile first: o app precisa ser confortável no celular.
 
+## Harness (feedback automático)
+- Os hooks formatam e fazem lint de cada arquivo que você edita; se o hook devolver erro, corrija na hora.
+- Antes de declarar pronto, rode `pnpm verify:fast` até passar. O Stop hook roda de novo e bloqueia o encerramento se falhar. Se o script ainda não existir no projeto, diga isso na entrega.
+- Nunca contorne o harness: nada de pular git hooks, de `eslint-disable` ou `@ts-expect-error` sem justificativa no comentário, nem de enfraquecer um teste para ele passar.
+- Na entrega, inclua o resultado do último `verify:fast`.
+
 ## Entrega
 Resuma: arquivos criados/alterados, como testar manualmente, pendências.

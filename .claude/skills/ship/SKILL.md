@@ -7,8 +7,8 @@ disable-model-invocation: true
 Mensagem sugerida pelo usuário: $ARGUMENTS
 
 ## 1. Checagens (pare no primeiro erro e me mostre)
-Rode na raiz: `pnpm typecheck`, `pnpm lint`, `pnpm test`.
-Se algum comando ainda não existir no projeto, avise e pule apenas esse.
+Rode na raiz `pnpm verify` (formatação, lint, typecheck, check:arch, testes, build e check:bundle), e `pnpm e2e` se a mudança tocou apps/web.
+Se o `verify` ainda não existir no projeto, rode os que existirem entre `pnpm typecheck`, `pnpm lint` e `pnpm test`, e avise quais pulou.
 
 ## 2. Branch
 Se estiver na `main`, crie uma branch `feat/<slug>` ou `fix/<slug>` conforme o tipo da mudança.

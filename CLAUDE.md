@@ -42,8 +42,22 @@ Leia @docs/PRD.md e @docs/ARCHITECTURE.md antes de mudanças estruturais.
 - Toda feature nova tem teste.
 - Nunca edite .env*, lockfiles à mão ou migrations já aplicadas.
 
+## Harness e Definition of Done
+- Hooks em .claude/settings.json: `protect-files.sh` bloqueia edição de .env*, lockfile,
+  migrations já existentes e da própria config; `format-and-lint.sh` formata e faz lint de
+  cada arquivo editado; `typecheck-on-stop.sh` roda `pnpm verify:fast` antes de o agente
+  encerrar (até 3 tentativas). Não contorne os hooks; corrija o que eles apontam.
+- `pnpm verify:fast` (pacotes afetados) durante o trabalho; `pnpm verify` (tudo, inclusive
+  build e check:arch) antes do commit. Resultado em `.harness/last-verify.json`.
+- Pronto significa:
+  1. `pnpm verify` com exit 0;
+  2. se tocou UI, `pnpm e2e` do fluxo verde, sem violação axe serious/critical;
+  3. cada critério de aceite do plano marcado `- [x] CA-n → arquivo.test.ts`;
+  4. code-reviewer sem BLOQUEANTE e, se tocou auth/banco/rotas/IA, security-auditor sem CRÍTICA/ALTA.
+
 ## Fluxo de trabalho
 - Mudanças grandes: planejar antes (Plan Mode) e registrar um ADR em docs/ADR/.
-- Delegar (planejado: esses subagents ainda não existem em .claude/agents/; até lá,
-  faça o trabalho direto): UI -> frontend-dev, API/banco -> backend-dev, prompts de IA ->
-  ai-prompt-engineer, testes -> test-engineer. Revisar com code-reviewer no fim.
+- Delegar aos subagents de .claude/agents/: planos e ADRs -> architect, UI -> frontend-dev,
+  API/banco/packages/shared -> backend-dev, prompts de IA -> ai-prompt-engineer, regras de
+  gamificação -> gamification-designer, testes -> test-engineer. Revisar com code-reviewer
+  (mais security-auditor e ux-a11y-reviewer conforme a área); o /feature orquestra o ciclo.
