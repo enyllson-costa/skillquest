@@ -1,0 +1,154 @@
+{
+  "slug": "go",
+  "name": "Go",
+  "aliases": ["golang"],
+  "topics": [
+    {
+      "slug": "slices-e-maps",
+      "name": "Slices e maps",
+      "position": 0
+    },
+    {
+      "slug": "funcoes",
+      "name": "Funções",
+      "position": 1
+    },
+    {
+      "slug": "structs-e-interfaces",
+      "name": "Structs e interfaces",
+      "position": 2
+    },
+    {
+      "slug": "concorrencia",
+      "name": "Concorrência",
+      "position": 3
+    },
+    {
+      "slug": "tratamento-de-erros",
+      "name": "Tratamento de erros",
+      "position": 4
+    }
+  ],
+  "questions": [
+    {
+      "id": "go-slices-e-maps-d1-01",
+      "topicSlug": "slices-e-maps",
+      "stem": "Qual expressão cria um slice de `int` vazio com `make`?",
+      "options": ["`new([]int, 0)`", "`make([]int, 0)`", "`make(int[], 0)`", "`[]int.make(0)`"],
+      "correctIndex": 1,
+      "explanation": "`make` recebe o tipo do slice, o tamanho e, opcionalmente, a capacidade. As outras formas não são sintaxe válida de Go.",
+      "difficulty": 1
+    },
+    {
+      "id": "go-slices-e-maps-d3-01",
+      "topicSlug": "slices-e-maps",
+      "stem": "Qual é o valor de `len(m)` no final?\n\n```go\nm := map[string]int{\"a\": 1}\nm[\"b\"] = 2\ndelete(m, \"a\")\n```",
+      "options": ["`2`", "`0`", "`3`", "`1`"],
+      "correctIndex": 3,
+      "explanation": "O mapa começa com `a`, ganha `b` (2 entradas) e perde `a` com `delete`, restando só `b`.",
+      "difficulty": 3
+    },
+    {
+      "id": "go-funcoes-d2-01",
+      "topicSlug": "funcoes",
+      "stem": "Qual declaração define uma função que retorna um `int` e um `error`?",
+      "options": [
+        "`func f() int, error`",
+        "`func f() -> (int, error)`",
+        "`func f() (int, error)`",
+        "`func f(): (int, error)`"
+      ],
+      "correctIndex": 2,
+      "explanation": "Em Go, múltiplos retornos vêm entre parênteses logo depois dos parâmetros, sem `->` nem dois-pontos.",
+      "difficulty": 2
+    },
+    {
+      "id": "go-funcoes-d4-01",
+      "topicSlug": "funcoes",
+      "stem": "O que é impresso quando a função que contém o laço termina?\n\n```go\nfor i := 0; i < 3; i++ {\n    defer fmt.Print(i)\n}\n```",
+      "options": ["`210`", "`012`", "`333`", "`222`"],
+      "correctIndex": 0,
+      "explanation": "Os argumentos de `defer` são avaliados na hora em que ele é executado, e as chamadas adiadas rodam em ordem inversa (LIFO). Por isso a saída é 2, 1, 0.",
+      "difficulty": 4
+    },
+    {
+      "id": "go-structs-e-interfaces-d3-01",
+      "topicSlug": "structs-e-interfaces",
+      "stem": "Dados `type Animal interface{ Falar() string }` e `type Cao struct{}` com o método `func (c Cao) Falar() string`, o que é preciso para `var a Animal = Cao{}` compilar?",
+      "options": [
+        "Nada: a implementação da interface é implícita",
+        "Declarar `Cao implements Animal` na struct",
+        "Embutir `Animal` dentro da struct `Cao`",
+        "Registrar `Cao` como `Animal` em uma função `init()`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Em Go, um tipo satisfaz uma interface automaticamente ao ter todos os métodos dela. Não existe palavra-chave `implements`.",
+      "difficulty": 3
+    },
+    {
+      "id": "go-structs-e-interfaces-d5-01",
+      "topicSlug": "structs-e-interfaces",
+      "stem": "`*MeuErro` implementa `error`. Dada a função abaixo, qual é o valor de `err == nil` depois de `err := f()`?\n\n```go\nfunc f() error {\n    var p *MeuErro = nil\n    return p\n}\n```",
+      "options": [
+        "`true`, porque o ponteiro guardado é `nil`",
+        "`false`: a interface guarda o tipo dinâmico `*MeuErro`, mesmo com valor `nil`",
+        "O programa entra em pânico na comparação",
+        "O código não compila, pois `nil` não pode ser retornado como `error`"
+      ],
+      "correctIndex": 1,
+      "explanation": "Um valor de interface só é `nil` quando tipo e valor são `nil`. Aqui o tipo é `*MeuErro`, então a comparação dá `false`; retorne `nil` explicitamente.",
+      "difficulty": 5
+    },
+    {
+      "id": "go-concorrencia-d2-01",
+      "topicSlug": "concorrencia",
+      "stem": "O que a palavra-chave `go` faz antes de uma chamada de função?",
+      "options": [
+        "Executa a função de forma síncrona, só que mais rápido",
+        "Cria uma thread do sistema operacional dedicada à função",
+        "Executa a função em uma nova goroutine, sem esperar que ela termine",
+        "Marca a função para ser executada ao fim de `main`"
+      ],
+      "correctIndex": 2,
+      "explanation": "`go f()` agenda `f` em uma goroutine e segue em frente. As goroutines são leves e gerenciadas pelo runtime, não threads dedicadas.",
+      "difficulty": 2
+    },
+    {
+      "id": "go-concorrencia-d5-01",
+      "topicSlug": "concorrencia",
+      "stem": "O que acontece ao executar este programa?\n\n```go\nfunc main() {\n    ch := make(chan int)\n    ch <- 1\n    fmt.Println(<-ch)\n}\n```",
+      "options": [
+        "Imprime `1` e o programa termina normalmente",
+        "Imprime `0`, o valor zero do tipo do canal",
+        "Erro de compilação: o canal precisa ter buffer para ser usado",
+        "Deadlock: o envio bloqueia, pois ninguém recebe do canal sem buffer"
+      ],
+      "correctIndex": 3,
+      "explanation": "Em um canal sem buffer, o envio só termina quando alguém recebe. Como a recepção está na mesma goroutine, depois do envio, o runtime aborta com deadlock.",
+      "difficulty": 5
+    },
+    {
+      "id": "go-tratamento-de-erros-d1-01",
+      "topicSlug": "tratamento-de-erros",
+      "stem": "Qual é o valor zero do tipo `error`?",
+      "options": ["`\"\"`", "`0`", "`error{}`", "`nil`"],
+      "correctIndex": 3,
+      "explanation": "`error` é uma interface, e o valor zero de uma interface é `nil`. Por convenção, `nil` significa que não houve erro.",
+      "difficulty": 1
+    },
+    {
+      "id": "go-tratamento-de-erros-d4-01",
+      "topicSlug": "tratamento-de-erros",
+      "stem": "Por que usar `errors.Is(err, ErrX)` em vez de `err == ErrX` quando o erro pode ter sido embrulhado com `fmt.Errorf(\"...: %w\", err)`?",
+      "options": [
+        "`errors.Is` percorre a cadeia de erros embrulhados; `==` só vê o mais externo",
+        "`==` não compila quando aplicado a valores do tipo `error`",
+        "`errors.Is` compara as mensagens de texto, não a identidade dos erros",
+        "`%w` converte o erro em string, e `errors.Is` reverte isso"
+      ],
+      "correctIndex": 0,
+      "explanation": "O `%w` embrulha o erro original, e o valor externo deixa de ser igual a `ErrX`. `errors.Is` desembrulha a cadeia até achar uma correspondência.",
+      "difficulty": 4
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "slug": "python",
+  "name": "Python",
+  "aliases": ["py"],
+  "topics": [
+    {
+      "slug": "tipos-e-estruturas",
+      "name": "Tipos e estruturas de dados",
+      "position": 0
+    },
+    {
+      "slug": "funcoes",
+      "name": "Funções",
+      "position": 1
+    },
+    {
+      "slug": "orientacao-a-objetos",
+      "name": "Orientação a objetos",
+      "position": 2
+    },
+    {
+      "slug": "iteradores-e-geradores",
+      "name": "Iteradores e geradores",
+      "position": 3
+    },
+    {
+      "slug": "erros-e-excecoes",
+      "name": "Erros e exceções",
+      "position": 4
+    }
+  ],
+  "questions": [
+    {
+      "id": "py-tipos-e-estruturas-d1-01",
+      "topicSlug": "tipos-e-estruturas",
+      "stem": "Qual estrutura de dados do Python é ordenada e imutável?",
+      "options": ["`list`", "`tuple`", "`set`", "`dict`"],
+      "correctIndex": 1,
+      "explanation": "Tuplas mantêm a ordem e não permitem alterar os elementos depois de criadas. Listas também são ordenadas, mas são mutáveis.",
+      "difficulty": 1
+    },
+    {
+      "id": "py-tipos-e-estruturas-d3-01",
+      "topicSlug": "tipos-e-estruturas",
+      "stem": "Qual é o resultado de `len({1, 2, 2, 3})`?",
+      "options": ["`3`", "`4`", "`2`", "Erro, pois `{}` sempre cria um dicionário"],
+      "correctIndex": 0,
+      "explanation": "Chaves com elementos criam um `set`, que descarta duplicatas: `{1, 2, 3}` tem 3 elementos. Só `{}` vazio cria um dicionário.",
+      "difficulty": 3
+    },
+    {
+      "id": "py-funcoes-d2-01",
+      "topicSlug": "funcoes",
+      "stem": "O que `*args` recebe em `def f(*args):`?",
+      "options": [
+        "Os argumentos nomeados extras, agrupados em um dicionário",
+        "Os argumentos posicionais extras, agrupados em uma lista",
+        "Todos os argumentos, inclusive os nomeados, em um gerador",
+        "Os argumentos posicionais extras, agrupados em uma tupla"
+      ],
+      "correctIndex": 3,
+      "explanation": "`*args` coleta os posicionais que sobram em uma tupla. Os nomeados extras ficam em `**kwargs`, como dicionário.",
+      "difficulty": 2
+    },
+    {
+      "id": "py-funcoes-d4-01",
+      "topicSlug": "funcoes",
+      "stem": "O que a última linha imprime?\n\n```python\ndef add(x, lst=[]):\n    lst.append(x)\n    return lst\n\nadd(1)\nprint(add(2))\n```",
+      "options": ["`[2]`", "`[1]`", "`[1, 2]`", "Erro: `lst` não pode ter valor padrão mutável"],
+      "correctIndex": 2,
+      "explanation": "O valor padrão é criado uma única vez, na definição da função, e é compartilhado entre as chamadas. Por isso a lista acumula `1` e `2`; use `None` como padrão.",
+      "difficulty": 4
+    },
+    {
+      "id": "py-orientacao-a-objetos-d3-01",
+      "topicSlug": "orientacao-a-objetos",
+      "stem": "Qual decorador faz o primeiro parâmetro do método receber a própria classe (`cls`), e não a instância?",
+      "options": ["`@staticmethod`", "`@property`", "`@abstractmethod`", "`@classmethod`"],
+      "correctIndex": 3,
+      "explanation": "`@classmethod` passa a classe como primeiro argumento, útil em construtores alternativos. `@staticmethod` não recebe nem classe nem instância.",
+      "difficulty": 3
+    },
+    {
+      "id": "py-orientacao-a-objetos-d5-01",
+      "topicSlug": "orientacao-a-objetos",
+      "stem": "Qual é o resultado de `D().f()`?\n\n```python\nclass A:\n    def f(self): return \"A\"\n\nclass B(A):\n    def f(self): return \"B\"\n\nclass C(A):\n    def f(self): return \"C\"\n\nclass D(B, C):\n    pass\n```",
+      "options": ["`\"A\"`", "`\"B\"`", "`\"C\"`", "Erro: herança em diamante não é permitida"],
+      "correctIndex": 1,
+      "explanation": "A ordem de resolução de métodos (MRO) de `D` é D, B, C, A, então `f` é achado primeiro em `B`. `D.__mro__` mostra essa ordem.",
+      "difficulty": 5
+    },
+    {
+      "id": "py-iteradores-e-geradores-d2-01",
+      "topicSlug": "iteradores-e-geradores",
+      "stem": "O que a palavra-chave `yield` faz dentro de uma função?",
+      "options": [
+        "Transforma a função em um gerador, que devolve valores um a um",
+        "Encerra a função imediatamente, como faz o `return`",
+        "Executa o corpo da função em uma nova thread",
+        "Lança uma exceção que interrompe o laço atual"
+      ],
+      "correctIndex": 0,
+      "explanation": "Uma função com `yield` devolve um gerador. Cada `next()` retoma a execução de onde ela parou, sem guardar todos os valores na memória.",
+      "difficulty": 2
+    },
+    {
+      "id": "py-iteradores-e-geradores-d5-01",
+      "topicSlug": "iteradores-e-geradores",
+      "stem": "O que a segunda linha com `print` mostra?\n\n```python\ng = (x * 2 for x in range(3))\nprint(list(g))\nprint(list(g))\n```",
+      "options": ["`[0, 2, 4]`", "`None`", "`[]`", "Um erro `StopIteration`"],
+      "correctIndex": 2,
+      "explanation": "Geradores são de uso único: o primeiro `list(g)` consome tudo e o segundo recebe um gerador esgotado, que resulta em lista vazia. `list` trata o `StopIteration` internamente.",
+      "difficulty": 5
+    },
+    {
+      "id": "py-erros-e-excecoes-d1-01",
+      "topicSlug": "erros-e-excecoes",
+      "stem": "Qual bloco executa sempre, tenha ou não ocorrido uma exceção?",
+      "options": ["`finally`", "`else`", "`except`", "`try`"],
+      "correctIndex": 0,
+      "explanation": "`finally` roda de qualquer forma, o que o torna ideal para liberar recursos. `else` só roda se não houve exceção.",
+      "difficulty": 1
+    },
+    {
+      "id": "py-erros-e-excecoes-d4-01",
+      "topicSlug": "erros-e-excecoes",
+      "stem": "Qual é a diferença entre `except:` e `except Exception:`?",
+      "options": [
+        "Nenhuma: os dois capturam exatamente as mesmas exceções",
+        "`except:` captura apenas erros de sintaxe",
+        "`except Exception:` também captura `KeyboardInterrupt`",
+        "`except:` também captura `KeyboardInterrupt` e `SystemExit`"
+      ],
+      "correctIndex": 3,
+      "explanation": "`KeyboardInterrupt` e `SystemExit` herdam de `BaseException`, não de `Exception`. O `except:` vazio os captura e pode impedir que o programa seja interrompido.",
+      "difficulty": 4
+    }
+  ]
+}
