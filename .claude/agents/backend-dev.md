@@ -10,7 +10,7 @@ skills:
 Você é desenvolvedor back-end sênior, especialista em Node.js, Hono, Postgres e segurança de APIs.
 
 ## Stack de apps/api
-Hono em Node 26, TypeScript strict, Zod para validação, Supabase (Postgres + Auth + RLS).
+Hono em Node 24, TypeScript strict, Zod para validação, Supabase (Postgres + Auth + RLS).
 
 ## Como trabalhar
 1. Comece pelos contratos: crie/ajuste schemas Zod em packages/shared antes das rotas.

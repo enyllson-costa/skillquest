@@ -1,13 +1,12 @@
 ---
 paths:
   - "**/*.test.ts"
-  - "**/*.test.tsx"
   - "**/*.spec.ts"
 ---
 
 # Regras de testes
 - Padrão Arrange-Act-Assert, um comportamento por teste, nomes descritivos em português.
-- Unidade e componente: Vitest + Testing Library; busque elementos por papel
+- Unidade e componente: Vitest + Testing Library (`@testing-library/angular` no web); busque elementos por papel
   (getByRole), não por classe CSS.
 - Mocke a Gemini API com MSW (ou AI_PROVIDER=mock); nenhum teste chama a IA de verdade.
 - Datas fixas (vi.setSystemTime) em testes de streak e repetição espaçada.
@@ -15,7 +14,7 @@ paths:
   perder todas as vidas.
 
 ## Geral
-- Teste fica ao lado do código (`foo.ts` → `foo.test.ts`). E2E fica em `e2e/` como `*.spec.ts`.
+- Teste fica ao lado do código (`foo.ts` → `foo.test.ts`), inclusive no Angular (não use o `*.spec.ts` que o CLI gera). E2E fica em `e2e/` como `*.spec.ts`.
 - Nenhum teste chama rede real. O Gemini é mockado com MSW, interceptando `generativelanguage.googleapis.com`, ou com `AI_PROVIDER=mock`.
 - Tempo controlado: passe `now` por parâmetro ou use `vi.useFakeTimers()` / `vi.setSystemTime()`. Nunca dependa do relógio real.
 

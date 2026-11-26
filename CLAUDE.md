@@ -12,14 +12,17 @@ Leia @docs/PRD.md e @docs/ARCHITECTURE.md antes de mudanças estruturais.
 
 ## Stack (planejado)
 - Monorepo pnpm:
-  - apps/web: React 19 + Vite 8 + TypeScript strict + Tailwind + shadcn/ui
+  - apps/web: Angular (última estável; confirme ao instalar) + TypeScript strict + Tailwind +
+    Angular CDK (componentes próprios, sem Material/shadcn); estado com signals e `httpResource`.
+    Ver docs/ADR/0002-angular-em-vez-de-react.md
   - apps/api: Hono em Node 24, única camada que chama a IA (Google Gemini API, REST v1beta,
     plano gratuito; modelo via env `GEMINI_MODEL`, atrás da interface `QuestionGenerator`)
   - packages/shared: schemas Zod e tipos compartilhados
 - Supabase para auth e banco (Postgres + RLS)
 - Deploy na Vercel (plano Hobby): apps/web estático + apps/api como Vercel Functions (Node).
   A api é stateless: nada de estado em memória; trabalho após a resposta só com `waitUntil`.
-- Testes: Vitest + Testing Library (unidade/componente), Playwright (E2E), MSW para mockar a IA
+- Testes: Vitest + Angular Testing Library (unidade/componente, arquivos `*.test.ts`),
+  Playwright (E2E, `e2e/*.spec.ts`), MSW para mockar a IA
 
 ## Comandos (planejado)
 - pnpm dev        # web + api
@@ -30,7 +33,8 @@ Leia @docs/PRD.md e @docs/ARCHITECTURE.md antes de mudanças estruturais.
 
 ## Convenções
 - TypeScript strict, sem `any`.
-- Componentes de função + hooks; sem class components.
+- Front: componentes standalone com signals (`input()`, `output()`, `computed`), `OnPush` e `inject()`;
+  zoneless; control flow `@if`/`@for`; sem NgModules.
 - Chave do Gemini só em apps/api (.env); nunca no front, nunca no git.
 - Testes nunca chamam o Gemini real: use `AI_PROVIDER=mock` / MSW.
 - Toda resposta da IA é validada com Zod antes de chegar ao usuário.
