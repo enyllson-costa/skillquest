@@ -1,0 +1,679 @@
+{
+  "slug": "typescript",
+  "name": "TypeScript",
+  "aliases": ["ts"],
+  "topics": [
+    {
+      "slug": "tipos-basicos",
+      "name": "Tipos básicos",
+      "position": 0
+    },
+    {
+      "slug": "funcoes",
+      "name": "Funções",
+      "position": 1
+    },
+    {
+      "slug": "interfaces-e-tipos",
+      "name": "Interfaces e tipos",
+      "position": 2
+    },
+    {
+      "slug": "generics",
+      "name": "Generics",
+      "position": 3
+    },
+    {
+      "slug": "narrowing",
+      "name": "Narrowing",
+      "position": 4
+    }
+  ],
+  "questions": [
+    {
+      "id": "ts-tipos-basicos-d1-01",
+      "topicSlug": "tipos-basicos",
+      "stem": "Qual tipo representa uma lista de números como `[1, 2, 3]`?",
+      "options": ["`number[]`", "`[number]`", "`Number<[]>`", "`array<number>`"],
+      "correctIndex": 0,
+      "explanation": "`number[]` (ou `Array<number>`) descreve um array com qualquer quantidade de números. `[number]` é uma tupla de exatamente um elemento.",
+      "difficulty": 1
+    },
+    {
+      "id": "ts-tipos-basicos-d1-02",
+      "topicSlug": "tipos-basicos",
+      "stem": "Qual sintaxe declara uma tupla com um `string` seguido de um `number`?",
+      "options": [
+        "`string | number`",
+        "`(string, number)`",
+        "`{ string, number }`",
+        "`[string, number]`"
+      ],
+      "correctIndex": 3,
+      "explanation": "Tuplas usam colchetes, com um tipo por posição. `string | number` é uma união: aceita um valor de um tipo ou do outro, não os dois em ordem.",
+      "difficulty": 1
+    },
+    {
+      "id": "ts-tipos-basicos-d2-01",
+      "topicSlug": "tipos-basicos",
+      "stem": "Qual é o tipo inferido para `x` em `const x = \"Ana\";`?",
+      "options": ["`string`", "`\"Ana\"`", "`unknown`", "`any`"],
+      "correctIndex": 1,
+      "explanation": "Com `const`, o valor não pode mudar, então o TypeScript infere o tipo literal `\"Ana\"`. Já `let x = \"Ana\"` seria alargado para `string`.",
+      "difficulty": 2
+    },
+    {
+      "id": "ts-tipos-basicos-d2-02",
+      "topicSlug": "tipos-basicos",
+      "stem": "Qual é a principal diferença entre `unknown` e `any`?",
+      "options": [
+        "Com `any` é preciso estreitar o tipo antes de usar o valor; `unknown` desliga a checagem",
+        "`unknown` só aceita `undefined` e `null`",
+        "Com `unknown` é preciso estreitar o tipo antes de usar o valor; `any` desliga a checagem",
+        "São equivalentes: `unknown` é apenas outro nome para `any`"
+      ],
+      "correctIndex": 2,
+      "explanation": "`unknown` aceita qualquer valor, mas só permite usá-lo depois de um `typeof`, `instanceof` ou guarda de tipo. `any` abre mão da checagem e deixa passar erros.",
+      "difficulty": 2
+    },
+    {
+      "id": "ts-tipos-basicos-d3-01",
+      "topicSlug": "tipos-basicos",
+      "stem": "Dado `let idade = 30;`, o que acontece com a linha `idade = \"trinta\";`?",
+      "options": [
+        "Erro de compilação: `idade` foi inferida como `number`",
+        "Compila: `let` permite trocar o tipo da variável",
+        "Compila, e `idade` passa a ser `string | number`",
+        "Compila, e o erro só aparece em tempo de execução"
+      ],
+      "correctIndex": 0,
+      "explanation": "A inferência fixa o tipo da variável como `number` na declaração. Atribuir uma `string` depois é rejeitado pelo compilador.",
+      "difficulty": 3
+    },
+    {
+      "id": "ts-tipos-basicos-d3-02",
+      "topicSlug": "tipos-basicos",
+      "stem": "Dado `enum Cor { Vermelho, Verde, Azul }`, qual é o valor de `Cor.Verde`?",
+      "options": ["`0`", "`1`", "`2`", "`\"Verde\"`"],
+      "correctIndex": 1,
+      "explanation": "Enums numéricos começam em 0 e crescem de 1 em 1, então `Vermelho` vale 0 e `Verde` vale 1. O valor `\"Verde\"` só existiria em um enum de strings.",
+      "difficulty": 3
+    },
+    {
+      "id": "ts-tipos-basicos-d4-01",
+      "topicSlug": "tipos-basicos",
+      "stem": "Qual é o tipo de `nums` em `const nums = [1, 2, 3] as const;`?",
+      "options": [
+        "`number[]`",
+        "`readonly number[]`",
+        "`[number, number, number]`",
+        "`readonly [1, 2, 3]`"
+      ],
+      "correctIndex": 3,
+      "explanation": "`as const` transforma o array em uma tupla somente leitura de tipos literais. Sem ela, o tipo seria `number[]`.",
+      "difficulty": 4
+    },
+    {
+      "id": "ts-tipos-basicos-d4-02",
+      "topicSlug": "tipos-basicos",
+      "stem": "Por que a segunda linha dá erro?\n\n```ts\nconst config = { modo: \"dev\" };\nconst m: \"dev\" | \"prod\" = config.modo;\n```",
+      "options": [
+        "Porque `const` impede que propriedades de objetos tenham tipos literais",
+        "Porque `\"dev\" | \"prod\"` não pode ser usado para anotar variáveis",
+        "A propriedade `modo` é inferida como `string`, pois objetos são mutáveis",
+        "Porque `config` deveria ser declarado com `let` em vez de `const`"
+      ],
+      "correctIndex": 2,
+      "explanation": "Em objetos, o TypeScript alarga literais para `string`, já que a propriedade pode ser reatribuída. Use `as const` ou `\"dev\" as const` para manter o literal.",
+      "difficulty": 4
+    },
+    {
+      "id": "ts-tipos-basicos-d5-01",
+      "topicSlug": "tipos-basicos",
+      "stem": "Um time migra uma base grande de JavaScript para TypeScript. Qual estratégia reduz o risco sem travar as entregas?",
+      "options": [
+        "Converter tudo de uma vez, usando `any` onde o compilador reclamar, e revisar depois",
+        "Manter `strict` desligado até o fim da migração e ligá-lo num único commit",
+        "Colocar `// @ts-ignore` nos erros e tratá-los quando virarem bugs",
+        "Converter por pacotes, com `strict` ligado nos já migrados, e barrar novos `any` por lint"
+      ],
+      "correctIndex": 3,
+      "explanation": "Migrar por partes com `strict` nos pacotes prontos evita regressões e mantém o time entregando. Barrar novos `any` impede que a dívida cresça durante a migração.",
+      "difficulty": 5
+    },
+    {
+      "id": "ts-tipos-basicos-d5-02",
+      "topicSlug": "tipos-basicos",
+      "stem": "Um bug de produção veio de `lista[i]` devolver `undefined` fora do intervalo, sem aviso do compilador. Qual opção do `tsconfig` inclui `undefined` no tipo de acessos por índice?",
+      "options": [
+        "`strictNullChecks`",
+        "`noImplicitAny`",
+        "`noUncheckedIndexedAccess`",
+        "`exactOptionalPropertyTypes`"
+      ],
+      "correctIndex": 2,
+      "explanation": "`noUncheckedIndexedAccess` adiciona `undefined` ao tipo de `lista[i]`, forçando a checagem. As outras tratam de null, `any` implícito e propriedades opcionais, não de índices.",
+      "difficulty": 5
+    },
+    {
+      "id": "ts-funcoes-d1-01",
+      "topicSlug": "funcoes",
+      "stem": "Qual tipo de retorno indica que uma função não devolve valor?",
+      "options": ["`never`", "`void`", "`null`", "`empty`"],
+      "correctIndex": 1,
+      "explanation": "`void` marca funções usadas só pelo efeito colateral. `never` é para funções que nunca terminam normalmente.",
+      "difficulty": 1
+    },
+    {
+      "id": "ts-funcoes-d1-02",
+      "topicSlug": "funcoes",
+      "stem": "Como se declara um parâmetro opcional `nome` do tipo `string`?",
+      "options": [
+        "`nome?: string`",
+        "`nome: string?`",
+        "`?nome: string`",
+        "`nome: string | optional`"
+      ],
+      "correctIndex": 0,
+      "explanation": "O `?` vem logo depois do nome do parâmetro. Dentro da função, o tipo passa a ser `string | undefined`.",
+      "difficulty": 1
+    },
+    {
+      "id": "ts-funcoes-d2-01",
+      "topicSlug": "funcoes",
+      "stem": "O que o tipo de retorno `never` indica em uma função?",
+      "options": [
+        "Que ela nunca retorna: lança um erro ou entra em loop infinito",
+        "Que ela retorna `null` ou `undefined` ao terminar",
+        "Que ela pode retornar qualquer tipo de valor",
+        "Que ela só pode ser chamada uma única vez"
+      ],
+      "correctIndex": 0,
+      "explanation": "`never` descreve funções cujo fim nunca é alcançado, como uma que sempre lança exceção. Retornar `undefined` seria `void`.",
+      "difficulty": 2
+    },
+    {
+      "id": "ts-funcoes-d2-02",
+      "topicSlug": "funcoes",
+      "stem": "O que um parâmetro rest, como `...args: number[]`, faz?",
+      "options": [
+        "Espalha um array em argumentos separados na chamada",
+        "Torna opcionais todos os parâmetros anteriores",
+        "Coleta os argumentos restantes da chamada em um array",
+        "Exige que a função receba pelo menos um argumento"
+      ],
+      "correctIndex": 2,
+      "explanation": "O rest agrupa os argumentos que sobram em um array tipado. Espalhar um array em argumentos é o spread, usado na chamada.",
+      "difficulty": 2
+    },
+    {
+      "id": "ts-funcoes-d3-01",
+      "topicSlug": "funcoes",
+      "stem": "Qual declaração tipa corretamente o parâmetro `fn`, um callback que recebe um `number` e devolve `string`?",
+      "options": [
+        "`fn: (x: number): string`",
+        "`fn: number => string`",
+        "`fn: Function<number, string>`",
+        "`fn: (x: number) => string`"
+      ],
+      "correctIndex": 3,
+      "explanation": "Em tipos de função, o retorno vem depois de `=>`, e os parâmetros precisam de parênteses e nome. Os dois-pontos só valem em declarações de função, não em tipos.",
+      "difficulty": 3
+    },
+    {
+      "id": "ts-funcoes-d3-02",
+      "topicSlug": "funcoes",
+      "stem": "Dada `function f(a: number, b?: number)`, qual chamada compila?",
+      "options": ["`f()`", "`f(1)`", "`f(1, \"2\")`", "`f(1, 2, 3)`"],
+      "correctIndex": 1,
+      "explanation": "`a` é obrigatório e `b` é opcional, então `f(1)` é válida. Faltar `a`, passar uma `string` em `b` ou passar argumentos a mais são erros.",
+      "difficulty": 3
+    },
+    {
+      "id": "ts-funcoes-d4-01",
+      "topicSlug": "funcoes",
+      "stem": "O que acontece ao executar `f()`?\n\n```ts\nclass Contador {\n  n = 0;\n  inc() { this.n++; }\n}\nconst c = new Contador();\nconst f = c.inc;\nf();\n```",
+      "options": [
+        "Lança `TypeError`, porque `this` é `undefined` na chamada solta",
+        "Incrementa `c.n` normalmente, como em `c.inc()`",
+        "Falha na compilação, porque `inc` não pode ser atribuído a uma variável",
+        "Incrementa uma propriedade global `n`, criada na hora"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ao separar o método da instância, `this` se perde; em código de classe (modo estrito) ele fica `undefined` e `this.n++` lança erro. Use arrow function na propriedade ou `bind`.",
+      "difficulty": 4
+    },
+    {
+      "id": "ts-funcoes-d4-02",
+      "topicSlug": "funcoes",
+      "stem": "O que acontece com a chamada `pegar(v)`?\n\n```ts\nfunction pegar(x: string): string;\nfunction pegar(x: number): number;\nfunction pegar(x: string | number) { return x; }\n\nconst v: string | number = Math.random() > 0.5 ? \"a\" : 1;\npegar(v);\n```",
+      "options": [
+        "Compila, e o retorno é `string | number`, o tipo da implementação",
+        "Compila, e o retorno é `any`, pois o compilador não resolve",
+        "Erro, porque a implementação deveria vir antes das sobrecargas",
+        "Erro: nenhuma sobrecarga aceita `string | number`, e a implementação não é visível"
+      ],
+      "correctIndex": 3,
+      "explanation": "Só as assinaturas de sobrecarga são visíveis na chamada, e o argumento precisa casar com uma delas; uma união não casa. Para aceitar a união, declare uma sobrecarga extra.",
+      "difficulty": 4
+    },
+    {
+      "id": "ts-funcoes-d5-01",
+      "topicSlug": "funcoes",
+      "stem": "Uma função utilitária deve devolver o primeiro elemento de um array de qualquer tipo, preservando o tipo do elemento para quem chama. Qual assinatura é a melhor?",
+      "options": [
+        "`function primeiro(arr: any[]): any`",
+        "`function primeiro(arr: unknown[]): unknown`",
+        "`function primeiro<T>(arr: T[]): T | undefined`",
+        "`function primeiro(arr: string[] | number[]): string | number | undefined`"
+      ],
+      "correctIndex": 2,
+      "explanation": "O genérico liga o tipo de entrada ao de saída: `primeiro([1, 2])` resulta em `number | undefined`. `any` e `unknown` perdem essa relação, e a união fixa não cobre outros tipos.",
+      "difficulty": 5
+    },
+    {
+      "id": "ts-funcoes-d5-02",
+      "topicSlug": "funcoes",
+      "stem": "Uma biblioteca declara `onSave: () => void`. Um consumidor passa `() => api.salvar()`, que devolve uma `Promise`. O que acontece e qual é o risco?",
+      "options": [
+        "Erro de compilação, pois uma `Promise` não é atribuível ao retorno `void`",
+        "Compila, pois retorno `void` aceita qualquer valor; mas uma rejeição da Promise fica sem tratamento",
+        "Compila, e o TypeScript aguarda a Promise automaticamente antes de seguir",
+        "Compila apenas se a opção `strictFunctionTypes` estiver desligada"
+      ],
+      "correctIndex": 1,
+      "explanation": "Em tipos de função, `void` significa que o retorno será ignorado, não que seja proibido. Quem chama não aguarda a Promise, então um erro assíncrono pode passar despercebido.",
+      "difficulty": 5
+    },
+    {
+      "id": "ts-interfaces-e-tipos-d1-01",
+      "topicSlug": "interfaces-e-tipos",
+      "stem": "Qual palavra-chave cria um alias para qualquer tipo, inclusive uniões como `string | number`?",
+      "options": ["`interface`", "`type`", "`alias`", "`typedef`"],
+      "correctIndex": 1,
+      "explanation": "`type` nomeia qualquer tipo, incluindo uniões. `interface` só descreve formas de objeto e de funções chamáveis.",
+      "difficulty": 1
+    },
+    {
+      "id": "ts-interfaces-e-tipos-d1-02",
+      "topicSlug": "interfaces-e-tipos",
+      "stem": "Como se marca a propriedade `id` de uma interface como somente leitura?",
+      "options": [
+        "`const id: number;`",
+        "`final id: number;`",
+        "`readonly id: number;`",
+        "`id: readonly<number>;`"
+      ],
+      "correctIndex": 2,
+      "explanation": "O modificador `readonly` vem antes do nome da propriedade e impede a reatribuição. `const` não existe em propriedades de interface.",
+      "difficulty": 1
+    },
+    {
+      "id": "ts-interfaces-e-tipos-d2-01",
+      "topicSlug": "interfaces-e-tipos",
+      "stem": "O que as `interface`s permitem que os `type` aliases não permitem?",
+      "options": [
+        "Descrever uniões de tipos como `string | number`",
+        "Declarar propriedades opcionais com `?`",
+        "Descrever assinaturas de função chamáveis",
+        "Mesclar declarações de mesmo nome (declaration merging)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Duas `interface Usuario` no mesmo escopo se combinam em uma só; um `type` com nome repetido dá erro. Os `type` também têm propriedades opcionais e assinaturas de função, e só eles descrevem uniões.",
+      "difficulty": 2
+    },
+    {
+      "id": "ts-interfaces-e-tipos-d2-02",
+      "topicSlug": "interfaces-e-tipos",
+      "stem": "O que significa `Partial<Usuario>`?",
+      "options": [
+        "Um tipo em que todas as propriedades de `Usuario` viram opcionais",
+        "Um tipo só com as propriedades obrigatórias de `Usuario`",
+        "Um tipo em que todas as propriedades de `Usuario` viram somente leitura",
+        "Um tipo sem as propriedades que aceitam `null`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`Partial<T>` acrescenta `?` a cada propriedade de `T`. É útil em objetos de atualização parcial.",
+      "difficulty": 2
+    },
+    {
+      "id": "ts-interfaces-e-tipos-d3-01",
+      "topicSlug": "interfaces-e-tipos",
+      "stem": "Dado `interface Usuario { id: number; nome: string; email: string }`, qual tipo contém apenas `id` e `nome`?",
+      "options": [
+        "`Pick<Usuario, \"id\" | \"nome\">`",
+        "`Omit<Usuario, \"id\" | \"nome\">`",
+        "`Partial<Usuario>`",
+        "`Readonly<Usuario>`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`Pick` seleciona as chaves indicadas. `Omit` faz o oposto: remove essas chaves e deixaria só `email`.",
+      "difficulty": 3
+    },
+    {
+      "id": "ts-interfaces-e-tipos-d3-02",
+      "topicSlug": "interfaces-e-tipos",
+      "stem": "Dados `interface A { x: number }` e `type B = A & { y: string }`, qual valor é um `B` válido?",
+      "options": [
+        "`{ x: 1 }`",
+        "`{ y: \"a\" }`",
+        "`{ x: 1, y: \"a\" }`",
+        "`{ x: \"1\", y: \"a\" }`"
+      ],
+      "correctIndex": 2,
+      "explanation": "A interseção exige as propriedades dos dois lados, com os tipos corretos: `x` como `number` e `y` como `string`.",
+      "difficulty": 3
+    },
+    {
+      "id": "ts-interfaces-e-tipos-d4-01",
+      "topicSlug": "interfaces-e-tipos",
+      "stem": "Em qual(is) linha(s) o compilador acusa erro?\n\n```ts\ninterface P { nome: string }\nconst dados = { nome: \"Ana\", idade: 30 };\nconst a: P = dados;\nconst b: P = { nome: \"Ana\", idade: 30 };\n```",
+      "options": [
+        "Só na linha de `a`, porque `dados` tem uma propriedade a mais",
+        "Nas linhas de `a` e de `b`",
+        "Em nenhuma linha, pois objetos com propriedades extras sempre são aceitos",
+        "Só em `b`, pela checagem de propriedades em excesso de literais"
+      ],
+      "correctIndex": 3,
+      "explanation": "A checagem de propriedades em excesso só vale para literais de objeto atribuídos direto. Em `a`, `dados` é uma variável e o tipo estrutural é compatível.",
+      "difficulty": 4
+    },
+    {
+      "id": "ts-interfaces-e-tipos-d4-02",
+      "topicSlug": "interfaces-e-tipos",
+      "stem": "Por que esta interface não compila?\n\n```ts\ninterface Mapa {\n  [chave: string]: number;\n  nome: string;\n}\n```",
+      "options": [
+        "Index signatures só aceitam chaves do tipo `number`",
+        "Toda propriedade deve ser compatível com a index signature, e `nome` é `string`, não `number`",
+        "Uma interface não pode misturar index signature com propriedades nomeadas, de nenhum tipo",
+        "A propriedade `nome` precisaria ser opcional"
+      ],
+      "correctIndex": 1,
+      "explanation": "A index signature promete que todas as chaves string têm valor `number`, então `nome: string` a contradiz. Propriedades nomeadas são permitidas se seus tipos forem compatíveis.",
+      "difficulty": 4
+    },
+    {
+      "id": "ts-interfaces-e-tipos-d5-01",
+      "topicSlug": "interfaces-e-tipos",
+      "stem": "Uma tela de busca tem os estados carregando, sucesso (com dados) e erro (com mensagem). Qual modelagem evita estados impossíveis, como \"sucesso\" sem dados?",
+      "options": [
+        "Interface única: `{ carregando: boolean; dados?: T[]; erro?: string }`",
+        "Interface única: `{ status: string; dados: any; erro: any }`",
+        "Duas interfaces, `Sucesso` e `Erro`, mais um booleano `carregando` à parte",
+        "União discriminada por `status`, com `dados` só no estado \"ok\" e `msg` só no \"erro\""
+      ],
+      "correctIndex": 3,
+      "explanation": "Na união discriminada, cada estado só tem os campos que fazem sentido nele, e o `status` permite estreitar o tipo. Com campos opcionais, nada impede `carregando: true` junto com `erro`.",
+      "difficulty": 5
+    },
+    {
+      "id": "ts-interfaces-e-tipos-d5-02",
+      "topicSlug": "interfaces-e-tipos",
+      "stem": "Uma biblioteca pública exporta um tipo de configuração que os consumidores devem poder estender, acrescentando campos via module augmentation. O que usar?",
+      "options": [
+        "`type`, pois só aliases podem ser estendidos com `&`",
+        "`type`, pois aliases aceitam novas declarações do mesmo nome",
+        "`interface`, pois ela aceita declaration merging vindo de outros módulos",
+        "`class` abstrata, pois só classes podem ser estendidas por consumidores"
+      ],
+      "correctIndex": 2,
+      "explanation": "Uma `interface` pode ser reaberta por outro módulo para ganhar campos. Um `type` com o mesmo nome em outro lugar causa erro de duplicidade.",
+      "difficulty": 5
+    },
+    {
+      "id": "ts-generics-d1-01",
+      "topicSlug": "generics",
+      "stem": "Qual sintaxe declara uma função genérica com parâmetro de tipo `T`?",
+      "options": [
+        "`function id(T)(x: T): T`",
+        "`function id<T>(x: T): T`",
+        "`function id[T](x: T): T`",
+        "`function<T> id(x: T): T`"
+      ],
+      "correctIndex": 1,
+      "explanation": "O parâmetro de tipo fica entre `<>` logo depois do nome da função. As outras formas não são sintaxe válida.",
+      "difficulty": 1
+    },
+    {
+      "id": "ts-generics-d1-02",
+      "topicSlug": "generics",
+      "stem": "Qual tipo é equivalente a `Array<string>`?",
+      "options": ["`string[]`", "`[string]`", "`string | []`", "`Array[string]`"],
+      "correctIndex": 0,
+      "explanation": "`string[]` é a forma abreviada de `Array<string>`. `[string]` é uma tupla de um único elemento.",
+      "difficulty": 1
+    },
+    {
+      "id": "ts-generics-d2-01",
+      "topicSlug": "generics",
+      "stem": "Para que serve `extends` em `<T extends { length: number }>`?",
+      "options": [
+        "Restringir `T` a tipos que tenham a propriedade `length` do tipo `number`",
+        "Fazer `T` herdar de uma classe chamada `length`",
+        "Tornar `T` opcional na chamada",
+        "Exigir que `T` seja exatamente `{ length: number }`, sem outras propriedades"
+      ],
+      "correctIndex": 0,
+      "explanation": "Em generics, `extends` define uma restrição: qualquer tipo com `length: number` serve, como `string` ou arrays. Propriedades extras são permitidas.",
+      "difficulty": 2
+    },
+    {
+      "id": "ts-generics-d2-02",
+      "topicSlug": "generics",
+      "stem": "Dado `interface Caixa<T = string> { valor: T }`, o que significa usar `Caixa` sem argumento de tipo?",
+      "options": [
+        "É um erro de compilação",
+        "É o mesmo que `Caixa<any>`",
+        "É o mesmo que `Caixa<unknown>`",
+        "É o mesmo que `Caixa<string>`"
+      ],
+      "correctIndex": 3,
+      "explanation": "O valor após `=` é o tipo padrão, usado quando o argumento é omitido. Sem esse padrão, omitir o argumento seria erro.",
+      "difficulty": 2
+    },
+    {
+      "id": "ts-generics-d3-01",
+      "topicSlug": "generics",
+      "stem": "Qual deve ser o tipo de retorno de `function pegar<T, K extends keyof T>(obj: T, chave: K)` para que `pegar({ a: 1 }, \"a\")` seja `number`?",
+      "options": ["`T`", "`K`", "`T[K]`", "`keyof T`"],
+      "correctIndex": 2,
+      "explanation": "`T[K]` é o tipo da propriedade `K` dentro de `T`, aqui `number`. `K` seria o literal `\"a\"` e `T` o objeto inteiro.",
+      "difficulty": 3
+    },
+    {
+      "id": "ts-generics-d3-02",
+      "topicSlug": "generics",
+      "stem": "Por que `x.length` dá erro nesta função?\n\n```ts\nfunction tamanho<T>(x: T): number {\n  return x.length;\n}\n```",
+      "options": [
+        "Generics não permitem acessar propriedades dos parâmetros de função",
+        "Sem restrição, `T` pode ser qualquer tipo, sem garantia de que `length` exista",
+        "O tipo de retorno `number` é incompatível com valores genéricos",
+        "O retorno deveria ser anotado como `T`, e não como `number`"
+      ],
+      "correctIndex": 1,
+      "explanation": "Um `T` sem restrição equivale a \"qualquer coisa\", e nem todo tipo tem `length`. Corrija com `<T extends { length: number }>`.",
+      "difficulty": 3
+    },
+    {
+      "id": "ts-generics-d4-01",
+      "topicSlug": "generics",
+      "stem": "O que acontece com a chamada `mesclar(1, \"a\")`?\n\n```ts\nfunction mesclar<T>(a: T, b: T): T {\n  return a;\n}\nmesclar(1, \"a\");\n```",
+      "options": [
+        "Compila, e `T` é inferido como a união `string | number`",
+        "Compila, e `T` é inferido como `any`, aceitando os dois",
+        "Erro: `T` não vira união, e `\"a\"` não é compatível com `number`",
+        "Erro, porque dois parâmetros não podem compartilhar o mesmo `T`"
+      ],
+      "correctIndex": 2,
+      "explanation": "O TypeScript escolhe um único tipo para `T` a partir dos argumentos, sem criar uma união sozinho. Para aceitar tipos diferentes, use `mesclar<string | number>(...)` ou dois parâmetros de tipo.",
+      "difficulty": 4
+    },
+    {
+      "id": "ts-generics-d4-02",
+      "topicSlug": "generics",
+      "stem": "Dado `type NaoNulo<T> = T extends null | undefined ? never : T;`, qual é `NaoNulo<string | null>`?",
+      "options": ["`string | null`", "`string`", "`never`", "`null`"],
+      "correctIndex": 1,
+      "explanation": "Tipos condicionais distribuem sobre uniões: `string` permanece `string` e `null` vira `never`, que some da união. O resultado é `string`.",
+      "difficulty": 4
+    },
+    {
+      "id": "ts-generics-d5-01",
+      "topicSlug": "generics",
+      "stem": "Uma função `parse<T>(json: string): T` retorna `JSON.parse(json) as T`. Qual é o problema de design?",
+      "options": [
+        "`T` só aparece no retorno: é uma asserção disfarçada, sem validação em tempo de execução",
+        "Generics não podem aparecer apenas no tipo de retorno de uma função",
+        "`JSON.parse` não aceita ser combinado com asserções de tipo `as`",
+        "`T` deveria ter `any` como tipo padrão para evitar erros"
+      ],
+      "correctIndex": 0,
+      "explanation": "Quem chama `parse<Usuario>(...)` recebe confiança sem validação. O mais seguro é retornar `unknown` e validar com um schema ou guarda de tipo.",
+      "difficulty": 5
+    },
+    {
+      "id": "ts-generics-d5-02",
+      "topicSlug": "generics",
+      "stem": "Em `function log<T>(x: T): void`, o `T` aparece uma única vez na assinatura. Qual é a melhor recomendação?",
+      "options": [
+        "Manter, pois todo genérico aumenta a segurança de tipos do código",
+        "Trocar `T` por `any` para simplificar a assinatura",
+        "Acrescentar mais parâmetros de tipo para dar flexibilidade",
+        "Remover o genérico e usar `unknown`, pois `T` não relaciona entradas e saídas"
+      ],
+      "correctIndex": 3,
+      "explanation": "Um parâmetro de tipo só vale a pena quando liga duas ou mais posições da assinatura. Usado uma única vez, ele só complica; `unknown` expressa o mesmo.",
+      "difficulty": 5
+    },
+    {
+      "id": "ts-narrowing-d1-01",
+      "topicSlug": "narrowing",
+      "stem": "Qual operador verifica o tipo primitivo de um valor em tempo de execução e estreita o tipo no TypeScript?",
+      "options": ["`keyof`", "`as`", "`typeof`", "`satisfies`"],
+      "correctIndex": 2,
+      "explanation": "`typeof x === \"string\"` estreita `x` para `string` no bloco. `keyof` e `as` agem só em tempo de compilação, sem checagem real.",
+      "difficulty": 1
+    },
+    {
+      "id": "ts-narrowing-d1-02",
+      "topicSlug": "narrowing",
+      "stem": "Qual operador estreita um valor para uma instância de classe, como `Error`?",
+      "options": ["`typeof`", "`keyof`", "`extends`", "`instanceof`"],
+      "correctIndex": 3,
+      "explanation": "`valor instanceof Error` verifica a cadeia de protótipos e estreita o tipo. `typeof` devolveria só `\"object\"`.",
+      "difficulty": 1
+    },
+    {
+      "id": "ts-narrowing-d2-01",
+      "topicSlug": "narrowing",
+      "stem": "Com `x: string | null | undefined`, o que `if (x != null)` faz com o tipo de `x` dentro do bloco?",
+      "options": [
+        "`x` vira `string`, pois `!= null` exclui `null` e `undefined`",
+        "`x` vira `string | undefined`, pois `!= null` só remove `null`",
+        "`x` vira `string | null`, pois `!= null` só remove `undefined`",
+        "Nada muda, pois `!=` não estreita tipos em nenhum caso"
+      ],
+      "correctIndex": 0,
+      "explanation": "A comparação frouxa com `null` é verdadeira tanto para `null` quanto para `undefined`, então o compilador remove os dois. Com `!== null`, o `undefined` permaneceria.",
+      "difficulty": 2
+    },
+    {
+      "id": "ts-narrowing-d2-02",
+      "topicSlug": "narrowing",
+      "stem": "O que faz o operador `in` em `if (\"voar\" in animal)`?",
+      "options": [
+        "Percorre as chaves de `animal` uma a uma",
+        "Estreita a união para os tipos que possuem a propriedade `voar`",
+        "Verifica se o valor de `animal.voar` é verdadeiro",
+        "Converte `animal` para o tipo que declara `voar`"
+      ],
+      "correctIndex": 1,
+      "explanation": "`in` testa a existência da propriedade, e o compilador usa isso para estreitar a união. Ele não olha o valor da propriedade.",
+      "difficulty": 2
+    },
+    {
+      "id": "ts-narrowing-d3-01",
+      "topicSlug": "narrowing",
+      "stem": "Qual assinatura cria uma função de guarda que estreita um `unknown` para `Date`?",
+      "options": [
+        "`function ehData(x: unknown): Date`",
+        "`function ehData(x: unknown): x is Date`",
+        "`function ehData(x: unknown): boolean as Date`",
+        "`function ehData(x: Date): x is unknown`"
+      ],
+      "correctIndex": 1,
+      "explanation": "Um type predicate (`x is Date`) no retorno diz ao compilador que, se a função devolver `true`, `x` é `Date` no ramo chamador.",
+      "difficulty": 3
+    },
+    {
+      "id": "ts-narrowing-d3-02",
+      "topicSlug": "narrowing",
+      "stem": "Dentro de `case \"circulo\":`, qual propriedade pode ser acessada sem erro?\n\n```ts\ntype Forma =\n  | { tipo: \"circulo\"; raio: number }\n  | { tipo: \"quadrado\"; lado: number };\n\nfunction area(f: Forma) {\n  switch (f.tipo) {\n    case \"circulo\":\n      // aqui\n  }\n}\n```",
+      "options": [
+        "`f.lado`",
+        "Tanto `f.raio` quanto `f.lado`",
+        "`f.raio`",
+        "Nenhuma, até haver uma asserção de tipo"
+      ],
+      "correctIndex": 2,
+      "explanation": "O campo `tipo` é o discriminante: no `case \"circulo\"`, `f` é estreitado ao membro com `raio`. Ler `lado` ali seria erro.",
+      "difficulty": 3
+    },
+    {
+      "id": "ts-narrowing-d4-01",
+      "topicSlug": "narrowing",
+      "stem": "Qual é o problema de checar `n: number | undefined` com `if (n) { ... }`?",
+      "options": [
+        "O valor `0` também é falsy e cairia no `else` junto com `undefined`",
+        "O compilador rejeita checagens de truthiness em valores `number`",
+        "`if (n)` não estreita `undefined` para fora do tipo de `n`",
+        "`NaN` lançaria uma exceção dentro da condição do `if`"
+      ],
+      "correctIndex": 0,
+      "explanation": "A checagem de truthiness descarta `undefined`, mas também `0` e `NaN`, que são números válidos. Prefira `n !== undefined`.",
+      "difficulty": 4
+    },
+    {
+      "id": "ts-narrowing-d4-02",
+      "topicSlug": "narrowing",
+      "stem": "O que o `default` faz quando alguém acrescenta `\"d\"` à união `S` e não trata o novo caso?\n\n```ts\ntype S = \"a\" | \"b\" | \"c\";\n\nfunction f(s: S) {\n  switch (s) {\n    case \"a\": return 1;\n    case \"b\": return 2;\n    case \"c\": return 3;\n    default: {\n      const _exaustivo: never = s;\n      return _exaustivo;\n    }\n  }\n}\n```",
+      "options": [
+        "Lança uma exceção em tempo de execução automaticamente",
+        "Não faz nada, pois `never` aceita qualquer valor atribuído",
+        "Remove `\"d\"` da união `S` para manter o código consistente",
+        "Erro de compilação: `s` deixa de ser `never`, e isso aponta o caso novo"
+      ],
+      "correctIndex": 3,
+      "explanation": "Quando todos os casos são tratados, `s` é `never` no `default`. Um membro novo e não tratado fica no tipo e não pode ser atribuído a `never`, então o build falha.",
+      "difficulty": 4
+    },
+    {
+      "id": "ts-narrowing-d5-01",
+      "topicSlug": "narrowing",
+      "stem": "Um handler HTTP recebe `body: unknown`. Qual estratégia é a mais robusta para usar esse dado como `Pedido`?",
+      "options": [
+        "Validar com um schema (como `safeParse` do Zod) e usar o tipo inferido",
+        "Checar `typeof body === \"object\"` e aplicar `body as Pedido`",
+        "Criar `ehPedido(x): x is Pedido` que checa apenas se `x` não é `null`",
+        "Tipar o parâmetro como `any` e confiar que o cliente envia o formato certo"
+      ],
+      "correctIndex": 0,
+      "explanation": "Um schema verifica a estrutura de verdade em tempo de execução e entrega o tipo certo. Asserções e guardas pela metade só silenciam o compilador.",
+      "difficulty": 5
+    },
+    {
+      "id": "ts-narrowing-d5-02",
+      "topicSlug": "narrowing",
+      "stem": "Uma união de 6 tipos de evento é tratada em vários handlers. Qual modelagem escala melhor?",
+      "options": [
+        "Testar com `in` propriedades exclusivas de cada membro, handler por handler",
+        "Usar asserções `as` em cada handler que precise do tipo específico",
+        "Um único tipo com todas as propriedades opcionais, sem discriminante",
+        "Dar a cada membro uma propriedade literal comum (`tipo`) e usar `switch` exaustivo"
+      ],
+      "correctIndex": 3,
+      "explanation": "Um discriminante torna o narrowing simples e permite que o compilador aponte handlers incompletos ao surgir um sétimo evento. Com `in` ou campos opcionais, essa garantia some.",
+      "difficulty": 5
+    }
+  ]
+}
