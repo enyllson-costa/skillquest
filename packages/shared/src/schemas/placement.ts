@@ -12,11 +12,13 @@ export const StartPlacementRequestSchema = z.object({ technologyId: z.string().m
 export type StartPlacementRequest = z.infer<typeof StartPlacementRequestSchema>
 
 // answered >= 0: na retomada, vem com as respostas ja dadas.
-export const StartPlacementResponseSchema = z.object({
-  sessionId: z.string(),
-  question: QuestionDTOSchema,
-  progress: ProgressSchema,
-})
+export const StartPlacementResponseSchema = z
+  .object({
+    sessionId: z.string(),
+    question: QuestionDTOSchema,
+    progress: ProgressSchema,
+  })
+  .strict()
 export type StartPlacementResponse = z.infer<typeof StartPlacementResponseSchema>
 
 export const PlacementAnswerRequestSchema = AnswerRequestSchema
@@ -36,13 +38,15 @@ export const PlacementResultSchema = z.object({
 })
 export type PlacementResult = z.infer<typeof PlacementResultSchema>
 
-export const PlacementAnswerResponseSchema = z.object({
-  feedback: AnswerFeedbackSchema,
-  next: z.union([
-    z.object({ question: QuestionDTOSchema }).strict(),
-    z.object({ result: PlacementResultSchema }).strict(),
-  ]),
-  progress: ProgressSchema,
-  newAchievements: z.array(AchievementDTOSchema),
-})
+export const PlacementAnswerResponseSchema = z
+  .object({
+    feedback: AnswerFeedbackSchema,
+    next: z.union([
+      z.object({ question: QuestionDTOSchema }).strict(),
+      z.object({ result: PlacementResultSchema }).strict(),
+    ]),
+    progress: ProgressSchema,
+    newAchievements: z.array(AchievementDTOSchema),
+  })
+  .strict()
 export type PlacementAnswerResponse = z.infer<typeof PlacementAnswerResponseSchema>

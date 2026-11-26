@@ -81,6 +81,28 @@ describe('PracticeAnswerResponseSchema', () => {
       }).success,
     ).toBe(false)
   })
+  it('recusa next vazio', () => {
+    expect(PracticeAnswerResponseSchema.safeParse({ ...base, next: {} }).success).toBe(false)
+  })
+  it('recusa next com question e result juntos', () => {
+    expect(
+      PracticeAnswerResponseSchema.safeParse({
+        ...base,
+        next: {
+          question: {
+            id: 'q',
+            topic: { slug: 't', name: 'T' },
+            stem: 's',
+            options: ['a', 'b', 'c', 'd'],
+            difficulty: 1,
+            reportedByMe: false,
+            source: 'new',
+          },
+          result: { correctCount: 3, total: 5, xpGained: 50 },
+        },
+      }).success,
+    ).toBe(false)
+  })
 })
 
 describe('HintResponseSchema', () => {

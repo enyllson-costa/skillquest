@@ -107,7 +107,7 @@ export default defineConfig(
     },
   },
 
-  // ---- apps/web: angular-eslint (ADR 0002); tsconfigs explícitos porque o raiz só tem "references" ----
+  // ---- apps/web: angular-eslint (ADR 0002); tsconfigs explícitos porque o apps/web/tsconfig.json só tem "references" ----
   {
     files: ['apps/web/**/*.ts'],
     extends: [angular.configs.tsRecommended],
