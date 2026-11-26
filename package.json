@@ -1,0 +1,49 @@
+{
+  "name": "skillquest",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.21.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "test": "pnpm -r --if-present test && pnpm test:harness",
+    "test:harness": "vitest run --root scripts/harness",
+    "build": "pnpm -r --if-present build",
+    "check:arch": "node scripts/harness/check-arch.mjs",
+    "check:bundle": "node scripts/harness/check-bundle.mjs",
+    "verify": "node scripts/harness/verify.mjs",
+    "verify:fast": "node scripts/harness/verify.mjs --fast",
+    "prepare": "simple-git-hooks"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm exec lint-staged",
+    "commit-msg": "pnpm exec commitlint --edit \"$1\""
+  },
+  "lint-staged": {
+    "*.{ts,mjs,cjs,js}": [
+      "prettier --write",
+      "eslint --max-warnings=0"
+    ],
+    "*.{html,json,css,scss,yml,yaml}": "prettier --write"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.7",
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0",
+    "lint-staged": "^17.6.2",
+    "msw": "^3.0.7",
+    "prettier": "^3.10.1",
+    "simple-git-hooks": "^2.14.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.74.0",
+    "vitest": "^5.1.1"
+  }
+}

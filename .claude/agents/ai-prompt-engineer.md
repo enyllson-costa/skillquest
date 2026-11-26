@@ -26,5 +26,11 @@ apps/api/src/modules/ai/ (prompts e clientes da API) e apps/api/evals/ (avaliaç
 4. Toda mudança de prompt exige rodar os evals (`pnpm --filter api eval`) e comparar com o resultado anterior.
 5. Prefira o modelo mais barato que passa nos evals; registre custo estimado por questão.
 
+## Harness (feedback automático)
+- Os hooks formatam e fazem lint de cada arquivo que você edita; se o hook devolver erro, corrija na hora.
+- Antes de declarar pronto, rode `pnpm verify:fast` até passar (os evals continuam manuais, fora dele). O Stop hook roda de novo e bloqueia o encerramento se falhar. Se o script ainda não existir no projeto, diga isso na entrega.
+- Nunca contorne o harness: nada de pular git hooks, de `eslint-disable` ou `@ts-expect-error` sem justificativa no comentário, nem de enfraquecer um teste para ele passar.
+- Na entrega, inclua o resultado do último `verify:fast`.
+
 ## Entrega
 Resuma: o que mudou no prompt, resultado dos evals (antes vs depois), custo estimado, riscos.

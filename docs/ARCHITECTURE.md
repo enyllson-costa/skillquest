@@ -1,6 +1,8 @@
 # SkillQuest — Arquitetura
 
-> Status: rascunho v0.2 (2026-11-20). Os requisitos (RF/RNF) estão em [PRD.md](./PRD.md).
+> Status: rascunho v0.3 (2026-11-25). Os requisitos (RF/RNF) estão em [PRD.md](./PRD.md).
+>
+> v0.3: o `apps/web` passa de React para Angular (última estável), com Angular CDK + Tailwind e signals; ver [ADR 0002](./ADR/0002-angular-em-vez-de-react.md). A api, o shared, o banco e o deploy não mudam.
 >
 > A numeração das seções §1 a §9 foi preservada da v0.1 porque as rules (`.claude/rules/*.md`) e o PRD citam §2, §5, §6 e §7. A estrutura do monorepo entrou como §0, e a trilha, as lições, a revisão de erros, as conquistas e o card entraram como subseções de §7 e como §10.
 
@@ -13,15 +15,18 @@ skillquest/
 ├─ pnpm-workspace.yaml
 ├─ package.json                 # scripts: dev, test, e2e, typecheck, lint
 ├─ apps/
-│  ├─ web/                      # React 19 + Vite 8 + Tailwind + shadcn/ui (SPA)
+│  ├─ web/                      # Angular (última estável) + Angular CDK + Tailwind (SPA, zoneless)
+│  │  ├─ angular.json           # builders @angular/build:application e :unit-test (Vitest)
+│  │  ├─ proxy.conf.json        # dev: ng serve encaminha /api para a api local
 │  │  ├─ vercel.json            # rewrite /api/* → projeto api; SPA → index.html
-│  │  └─ src/
-│  │     ├─ routes/             # telas: login, catálogo, nivelamento, trilha, lição,
-│  │     │                      #   hoje, revisão de erros, progresso, conquistas,
-│  │     │                      #   cards, /c/:slug (pública, sem login)
-│  │     ├─ features/<feature>/ # componentes + hooks (TanStack Query) por feature
-│  │     ├─ components/ui/      # shadcn/ui
-│  │     └─ lib/                # cliente da api (fetch tipado), supabase auth client
+│  │  └─ src/app/
+│  │     ├─ app.config.ts       # provideZonelessChangeDetection, provideRouter, provideHttpClient
+│  │     ├─ app.routes.ts       # rotas lazy (loadComponent): login, catálogo, nivelamento,
+│  │     │                      #   trilha, lição, hoje, revisão de erros, progresso,
+│  │     │                      #   conquistas, cards, /c/:slug (pública, sem authGuard)
+│  │     ├─ features/<feature>/ # componentes standalone + serviços (signals, httpResource)
+│  │     ├─ shared/ui/          # componentes próprios (Tailwind + Angular CDK)
+│  │     └─ core/               # cliente da api tipado, interceptor de auth, supabase auth, authGuard
 │  └─ api/                      # Hono, Node 24, Vercel Functions
 │     ├─ api/index.ts           # entrada da Vercel Function (adapta o app Hono) — confirme o formato na doc da Vercel
 │     ├─ src/
@@ -62,6 +67,8 @@ skillquest/
 │  ├─ migrations/               # SQL versionado (tabelas, RLS, índices, RPCs, seed de achievements)
 │  └─ seed.sql                  # dados locais/demo (opcional)
 ├─ e2e/                         # Playwright *.spec.ts (AI_PROVIDER=mock)
+├─ scripts/harness/             # verify, check-arch, check-bundle (+ testes) — ADR 0003
+├─ .github/workflows/ci.yml     # pnpm verify + commitlint em PR e push para main
 └─ docs/                        # PRD, ARCHITECTURE, ADR/, plans/
 ```
 
@@ -76,8 +83,8 @@ Regras de dependência:
 
 ```mermaid
 flowchart LR
-  subgraph web["apps/web (React 19 + Vite)"]
-    UI[Rotas e telas] --> Q[TanStack Query]
+  subgraph web["apps/web (Angular)"]
+    UI[Rotas e telas] --> Q["Serviços<br/>(signals + httpResource)"]
     UI --> SA[Supabase Auth client]
     PUB["/c/:slug (pública)"] --> Q
   end
@@ -628,7 +635,7 @@ function evaluateAchievements(ctx: AchievementContext, unlocked: Set<string>): s
 | `PUBLIC_WEB_URL` | base para montar a `url` do card (§4.5) |
 | `DEMO_MODE` | `true` usa o `MockGenerator` e um usuário demo (RF-13) |
 
-O apps/web só recebe `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`. A api é chamada pelo caminho relativo `/api/v1` (ver §9), então não precisa de `VITE_API_URL` em produção; em dev, o proxy do Vite aponta `/api` para a api local.
+O apps/web só recebe a configuração pública `supabaseUrl` e `supabaseAnonKey`, injetada no build (opção `define` do `angular.json` ou arquivos `environments/`; confirme ao instalar). A api é chamada pelo caminho relativo `/api/v1` (ver §9), então não precisa de URL da api em produção; em dev, o `proxy.conf.json` do `ng serve` aponta `/api` para a api local.
 
 Em produção, as variáveis ficam nas Environment Variables de cada projeto Vercel, nunca em arquivo commitado.
 
@@ -641,7 +648,7 @@ Em produção, as variáveis ficam nas Environment Variables de cada projeto Ver
 | Unidade | Vitest | `leveling` (funções puras, com casos numéricos como os do §6, incluindo "resposta com dica não altera θ"); `srs`: `toRating` (cada linha da tabela do §7.4, e o mesmo acerto rápido em dificuldade 2 dá Good) e o agendamento via `ts-fsrs` com datas fixas (erro hoje volta amanhã, intervalo cresce com acertos seguidos); `path/build` (o exemplo do §7.1, primeira montagem, refazer nivelamento sem regredir, tudo `tested`, empate de θ); dificuldade das lições (§7.2, limites de `clamp`); `achievements/rules` (cada regra no limite, ex. 999 vs 1000 XP, 5 vs 6 acertos); validadores da saída da IA; regras de XP (incluindo a metade na revisão de erros), streak e vidas |
 | Integração da api | Vitest + MSW | MSW intercepta `generativelanguage.googleapis.com` e devolve respostas válidas, inválidas e 429, para exercitar o pipeline do §2; `LESSON_LOCKED`; `NO_MISTAKES`; `RATE_LIMITED`; revisão de erros não altera vidas nem θ; nenhuma resposta de pergunta contém `correctIndex` antes da resposta; usuário A não vê trilha, sessão nem card de B |
 | Card público | Vitest | `GET /public/cards/:slug` sem token devolve só `displayName`, `technology.name`, `level`, `updatedAt` (verifica a ausência de e-mail, `userId`, `theta`); card desativado e slug inexistente dão o mesmo 404; `displayName` com `@` é recusado |
-| Componente | Vitest + Testing Library | telas do quiz, trilha (estados por texto/rótulo), lição, "Hoje", revisão de erros |
+| Componente | Vitest (builder `@angular/build:unit-test`) + Angular Testing Library | telas do quiz, trilha (estados por texto/rótulo), lição, "Hoje", revisão de erros |
 | E2E | Playwright | fluxo completo com `AI_PROVIDER=mock`: login, resolver tecnologia, nivelamento, resultado, trilha, lição completa, perder todas as vidas, revisão de erros, criar e desativar card |
 
 Nenhum teste chama a API real do Gemini. `apps/api/evals/` é avaliação manual de prompts e fica fora do `pnpm test`.
@@ -652,7 +659,7 @@ Um repositório só, com **dois projetos Vercel**, cada um com seu Root Director
 
 | Projeto Vercel | Root Directory | O que publica |
 |---|---|---|
-| `skillquest-web` | `apps/web` | build estático do Vite (SPA) |
+| `skillquest-web` | `apps/web` | build estático do Angular (SPA), Output Directory `dist/web/browser` |
 | `skillquest-api` | `apps/api` | app Hono como Vercel Functions, runtime **Node** (não Edge) |
 
 - **Mesma origem:** o `vercel.json` do web reescreve `/api/*` para o domínio do projeto api. O navegador só fala com um domínio, então não há CORS para configurar, e a SPA também reescreve as outras rotas (incluindo `/c/:slug`) para `index.html`.

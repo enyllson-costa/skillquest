@@ -1,0 +1,7 @@
+*.md
+docs/
+.claude/
+.harness/
+pnpm-lock.yaml
+dist/
+coverage/
